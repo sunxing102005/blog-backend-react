@@ -1,0 +1,27 @@
+.siderbar .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.siderbar {
+    min-height: 100vh;
+}
+
+.siderbar .trigger:hover {
+    color: #1890ff;
+}
+
+.siderbar .logo {
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    color: #fff;
+    font-size: 26px;
+}
+
+.siderbar .logo a {
+    color: #fff;
+    text-decoration: none;
+}

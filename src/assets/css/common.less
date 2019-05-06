@@ -1,0 +1,103 @@
+/*
+ * 通用样式
+ **/
+.animated {
+    animation-duration: 0.35s;
+}
+
+// 字体颜色
+.text-info {
+    color: #5bc0de; //一般信息
+}
+.text-primary {
+    color: #337ab7; //首选项
+}
+.text-success {
+    color: #5cb85c; //成功
+}
+.text-warning {
+    color: #f0ad4e; //警告
+}
+.text-danger {
+    color: #d9534f; //危险
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+.isIE {
+    // display: none;
+    position: absolute;
+    height: 50px;
+    width: 100%;
+    z-index: 9999;
+    line-height: 50px;
+    text-align: center;
+    background: #d9534f;
+    color: #fff;
+}
+
+//一种列表样式
+.box-list-warpper {
+    margin-bottom: 10px;
+    .has-bottom {
+        border-bottom: 1px solid #ebeef5;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+    .type {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    .detail {
+        margin-bottom: 4px;
+        .flex-end {
+            color: #409eff;
+        }
+        .title {
+            font-weight: 600;
+        }
+    }
+    .flex-end {
+        text-align: right;
+        span {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        .arrow {
+            margin-left: 6px;
+        }
+    }
+    .flex-no-link.flex-end {
+        text-align: right;
+        span {
+            &:hover {
+                cursor: default;
+            }
+        }
+    }
+    .el-row {
+        label {
+            display: inline-block;
+            padding-right: 4px;
+            color: #969696;
+        }
+    }
+}
+
+//列表是模块，模块为空的样式
+.empty-list {
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+}
+
+.ml5 {
+    margin-left: 5px;
+}
