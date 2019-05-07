@@ -1,16 +1,16 @@
-import React, { Component } from "react";
+import React from "react";
 import "./Layout.css";
-import { Layout, Menu, Dropdown, Icon, LocaleProvider, Avatar } from "antd";
-import { HashRouter as Router, Route } from "react-router-dom";
+import { Layout, Menu, Dropdown, Icon } from "antd";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import Sidebar from "@/components/sidebar/Sidebar";
 import Breadcrumb from "@/components/breadcrumb/index";
-import zhCN from "antd/lib/locale-provider/zh_CN";
-// import Routes from "./router/index";
 import "antd/dist/antd.css";
 import routes from "@/router/index";
-import RouterGurad from "@/components/common/RouterGurad";
+import { fedLogout } from "@/action/system/login";
+import { connect } from "react-redux";
+import history from "@/utils/history";
 const { Header, Content } = Layout;
-export default class MainLayout extends React.Component {
+class MainLayout extends React.Component {
     state = {
         collapsed: false
     };
@@ -19,17 +19,27 @@ export default class MainLayout extends React.Component {
             collapsed: !prevState.collapsed
         }));
     };
+    onLogOut = () => {
+        this.props.logout();
+    };
     render() {
         const layoutMenu = (
             <Menu>
                 <Menu.Item>
-                    <span onClick={this.onLogOut}>退出</span>
+                    <div
+                        onClick={() => {
+                            history.push("/");
+                        }}
+                    >
+                        首页
+                    </div>
+                </Menu.Item>
+                <Menu.Item>
+                    <div onClick={this.onLogOut}>退出</div>
                 </Menu.Item>
             </Menu>
         );
-        const { children } = this.props;
         return (
-            // <LocaleProvider locale={zhCN}>
             <Router>
                 {/* <Route
                         path="/login"
@@ -76,22 +86,36 @@ export default class MainLayout extends React.Component {
                             }}
                         >
                             <Breadcrumb />
-                            {routes.map((route, index) => {
-                                return (
-                                    <Route
-                                        path={route.path}
-                                        component={route.main}
-                                        key={route.path}
-                                    />
-                                );
-                            })}
-                            {/* {children} */}
-                            {/* <RouterGurad config={routes} /> */}
+                            <Switch>
+                                {routes.map((route, index) => {
+                                    return (
+                                        <Route
+                                            path={route.path}
+                                            component={route.main}
+                                            key={route.path}
+                                            exact
+                                        />
+                                    );
+                                })}
+                            </Switch>
                         </Content>
                     </Layout>
                 </Layout>
             </Router>
-            // </LocaleProvider>
         );
     }
 }
+const mapStateProps = state => ({
+    data: state.article.data,
+    total: state.article.data.count
+});
+const mapDispatchProps = dispatch => ({
+    logout: () => {
+        dispatch(fedLogout());
+    }
+});
+const enhance = connect(
+    mapStateProps,
+    mapDispatchProps
+);
+export default enhance(MainLayout);

@@ -8,7 +8,7 @@
  * }
  * service(option)
  */
-import { notification } from "antd";
+import { notification, message } from "antd";
 import axios from "axios";
 import base from "./base.js";
 import React from "react";
@@ -70,43 +70,31 @@ const service = option => {
     console.log("url:", url);
 
     return axios({ url, ...req, responseType })
-        .then(
-            res => {
-                const response = res.data;
-                if (isBlob) {
-                    return response;
-                }
-                if (response.data.errno) {
-                    let errmsg = response.data.errmsg;
-                    req.callbackErrFn(errmsg || "接口请求失败");
-                } else {
-                    req.callbackFn && req.callbackFn(response.data);
-                    return response.data;
-                }
-            },
-            error => {
-                // throw error.response;
-                req.callbackErrFn &&
-                    req.callbackErrFn(error.message || "接口请求失败");
+        .then(res => {
+            const response = res.data;
+            if (isBlob) {
+                return response;
             }
-        )
-        .catch(res => {
-            // if (res && +res.status >= 400) {
-            // Message({
-            //     duration: 4500,
-            //     type: "error",
-            //     message: `接口错误，错误码${res.status}`
-            // });
-            // }
+            if (response.data.errno) {
+                let errmsg = response.data.errmsg;
+                req.callbackErrFn(errmsg || "接口请求失败");
+            } else {
+                req.callbackFn && req.callbackFn(response.data);
+                return response.data;
+            }
+        })
+        .catch(error => {
+            let res = error.response;
+            console.log("res.status", res);
+            console.log("notification", notification);
+            message.destroy();
             if ((res.status = 401)) {
-                notification["Warning"]({
-                    message: "登录失效，请重新登录"
+                message.info("登录信息失效，请重新登录").then(() => {
+                    React.$store.dispatch(fedLogout());
                 });
-                fedLogout()(React.$store.dispatch);
             }
             req.callbackErrFn &&
                 req.callbackErrFn(res.message || "接口请求失败");
-            // throw res;
         });
 };
 

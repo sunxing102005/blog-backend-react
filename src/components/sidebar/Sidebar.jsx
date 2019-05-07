@@ -52,7 +52,11 @@ const sidebar = class App extends React.Component {
                     defaultSelectedKeys={this.defaultSelectedKeys}
                 >
                     {routerConfig.map((route, index) => {
-                        if (route.children && route.children.length > 0) {
+                        if (
+                            route.children &&
+                            route.children.length > 0 &&
+                            route.hidden != true
+                        ) {
                             return (
                                 <SubMenu
                                     key={route.path}
@@ -74,12 +78,14 @@ const sidebar = class App extends React.Component {
                                     })}
                                 </SubMenu>
                             );
-                        } else {
+                        } else if (!route.hidden) {
                             return (
                                 <Menu.Item key={route.path}>
                                     <Link to={route.path}>{route.name}</Link>
                                 </Menu.Item>
                             );
+                        } else {
+                            return "";
                         }
                     })}
                     {/* <Menu.Item key="article">

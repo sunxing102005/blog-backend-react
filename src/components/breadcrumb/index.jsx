@@ -1,4 +1,4 @@
-import { Breadcrumb, Alert } from "antd";
+import { Breadcrumb } from "antd";
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { routerConfig } from "../../router/routerConfig";
@@ -6,7 +6,7 @@ const SelfBreadcrumb = class SelfBreadcrumb extends React.Component {
     getRouterConfig(ret = [], currentPath, routerConfig) {
         if (routerConfig) {
             routerConfig.forEach((item, index) => {
-                if (currentPath.indexOf(item.path) != -1) {
+                if (currentPath.indexOf(item.path) != -1 && item.path !== "/") {
                     ret.push({ name: item.name, path: item.path });
                     if (item.children) {
                         this.getRouterConfig(ret, currentPath, item.children);
@@ -25,17 +25,17 @@ const SelfBreadcrumb = class SelfBreadcrumb extends React.Component {
         );
         console.log("pathSnippets", pathSnippets);
         const extraBreadcrumbItems = pathSnippets.map((item, index) => {
-            // console.log("index", index);
-            // const url = `${pathSnippets.slice(0, index + 1).join("/")}`;
-            // console.log("url", url);
-            return (
-                <Breadcrumb.Item key={item.path}>
-                    <Link to={item.path}>{item.name}</Link>
-                </Breadcrumb.Item>
-            );
+            let link = null;
+            if (index === 0) {
+                link = <a>{item.name}</a>;
+            } else {
+                link = <Link to={item.path}>{item.name}</Link>;
+            }
+            return <Breadcrumb.Item key={item.path}>{link}</Breadcrumb.Item>;
         });
         console.log("extraBreadcrumbItems", extraBreadcrumbItems);
-        const breadcrumbItems = [
+
+        let breadcrumbItems = [
             <Breadcrumb.Item key="home">
                 <Link to="/">首页</Link>
             </Breadcrumb.Item>

@@ -4,6 +4,7 @@ export const routerConfig = [
         meta: { icon: "profile", expanded: false },
         path: "/article",
         name: "管理",
+        hidden: false,
         // main: AsyncComponent(() => import("../components/layout/Layout")),
         children: [
             {
@@ -17,12 +18,19 @@ export const routerConfig = [
         ]
     },
     {
-        meta: { expanded: false },
+        meta: { icon: "bookmark", expanded: false },
         main: AsyncComponent(() => import("@/components/news/News")),
         path: "/news",
+        hidden: false,
         name: "新闻"
+    },
+    {
+        meta: { expanded: false },
+        main: AsyncComponent(() => import("@/components/dashBoard/Dashboard")),
+        path: "/",
+        hidden: true,
+        name: "首页"
     }
-
     // {
     //     path: "/",
     //     main: AsyncComponent(() => import("@/components/layout/Layout")),

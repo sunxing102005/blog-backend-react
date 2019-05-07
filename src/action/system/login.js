@@ -16,7 +16,6 @@ export function login(params) {
             data: params
         })
             .then(res => {
-                // dispatch(setList(res));
                 const data = res;
                 if (data.token) {
                     console.log("history", history);
@@ -33,9 +32,11 @@ export function login(params) {
 }
 export function fedLogout() {
     return dispatch => {
-        dispatch(settoken(""));
-        dispatch(setName(""));
-        removeToken();
-        history.push("/login");
+        return new Promise(resolve => {
+            dispatch(settoken(""));
+            dispatch(setName(""));
+            removeToken();
+            window.location.reload();
+        });
     };
 }
