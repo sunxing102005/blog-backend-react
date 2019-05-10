@@ -9,6 +9,7 @@ import Confirm from "../common/Confirm";
 import { deleteArticle } from "@/api/content";
 import { withRouter } from "react-router-dom";
 import { compose } from "redux";
+import date from "@/utils/date";
 class Article extends React.Component {
     state = {
         total: 0,
@@ -72,6 +73,7 @@ class Article extends React.Component {
             });
     };
     render() {
+        // const dateVal = date(record * 1000, "YYYY-MM")
         const columns = [
             {
                 title: "文章名称",
@@ -99,6 +101,17 @@ class Article extends React.Component {
                 render: text => (
                     <span className="resetTd TdWidth200">
                         {text === 1 ? "草稿" : "发布"}
+                    </span>
+                )
+            },
+            {
+                title: "发布时间",
+                dataIndex: "create_time",
+                key: "create_time",
+                width: 200,
+                render: text => (
+                    <span className="resetTd TdWidth200">
+                        {date.toFormat(text * 1000, "yyyy-MM-dd")}
                     </span>
                 )
             },
