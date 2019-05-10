@@ -14,6 +14,14 @@ export const routerConfig = [
                 ),
                 path: "/article/table",
                 name: "博客管理"
+            },
+            {
+                main: AsyncComponent(() =>
+                    import("@/components/article/EditArticle")
+                ),
+                path: "/article/edit",
+                hidden: true,
+                name: "编辑博客"
             }
         ]
     },

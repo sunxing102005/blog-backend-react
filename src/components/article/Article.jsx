@@ -1,22 +1,43 @@
 import React from "react";
-import { fetchListData } from "../../action/system/article";
+import { fetchListData, setTags } from "../../action/system/article";
 import { connect } from "react-redux";
+import { Button, message } from "antd";
 import BasicTable from "../common/BasicTable";
 import Pagination from "../common/Pagination";
 import SearchForm from "../searchForm/article";
+import Confirm from "../common/Confirm";
+import { deleteArticle } from "@/api/content";
+import { withRouter } from "react-router-dom";
+import { compose } from "redux";
 class Article extends React.Component {
+    state = {
+        total: 0,
+        pageSize: 10,
+        page: 1,
+        tableLoading: false,
+        delModelVisible: false,
+        currentRecord: {}
+    };
     componentWillMount() {
         this.fetch({
             pageSize: this.state.pageSize,
             page: this.state.page
         });
+        // this.props.fetchTags({ type: "tag" });
     }
-    state = {
-        total: 0,
-        pageSize: 10,
-        page: 1,
-        tableLoading: false
-    };
+    onEdit(record) {
+        const articleId = record.id;
+        this.props.fetchSingleArt({
+            id: articleId,
+            fn: () => {
+                this.props.history.push("/article/edit");
+            }
+        });
+        // console.log("tt", tt);
+    }
+    onDelete(record) {
+        this.setState({ delModelVisible: true, currentRecord: record });
+    }
     onShowSizeChange(page, pageSize) {
         this.setState({ pageSize });
         this.fetch({ page: 1, pageSize });
@@ -37,6 +58,19 @@ class Article extends React.Component {
             }
         });
     }
+
+    handleConfirm = () => {
+        deleteArticle({ id: this.state.currentRecord.id })
+            .then(res => {
+                message.success("删除成功！");
+                this.setState({ delModelVisible: false });
+                this.fetch({ pageSize: this.state.pageSize, page: 1 });
+            })
+            .catch(err => {
+                message.error("删除失败！");
+                console.error("error", err);
+            });
+    };
     render() {
         const columns = [
             {
@@ -64,7 +98,7 @@ class Article extends React.Component {
                 width: 200,
                 render: text => (
                     <span className="resetTd TdWidth200">
-                        {text == 1 ? "草稿" : "发布"}
+                        {text === 1 ? "草稿" : "发布"}
                     </span>
                 )
             },
@@ -76,6 +110,32 @@ class Article extends React.Component {
                 render: text => (
                     <span className="resetTd TdWidth200">{text}</span>
                 )
+            },
+            {
+                title: "操作",
+                dataIndex: "operate",
+                key: "operate",
+                width: 200,
+                render: (text, record) => (
+                    <div>
+                        <Button
+                            style={{ marginRight: "10px" }}
+                            onClick={this.onEdit.bind(this, record)}
+                            type="primary"
+                        >
+                            编辑
+                        </Button>
+                        <Button
+                            style={{ marginRight: "10px" }}
+                            type="danger"
+                            onClick={() => {
+                                this.onDelete(record);
+                            }}
+                        >
+                            删除
+                        </Button>
+                    </div>
+                )
             }
         ];
         const dataSource =
@@ -84,7 +144,7 @@ class Article extends React.Component {
                     return { ...item, key: index };
                 })) ||
             [];
-        console.log("this.props:", this.props);
+        // console.log("this.props:", this.props);
         // console.log("dataSource", dataSource);
         return (
             <div>
@@ -100,6 +160,15 @@ class Article extends React.Component {
                     data={dataSource}
                     tableWidth="1365"
                     tableLoading={this.state.tableLoading}
+                />
+                <Confirm
+                    handleConfirm={this.handleConfirm}
+                    handleCancel={() => {
+                        this.setState({ delModelVisible: false });
+                    }}
+                    visible={this.state.delModelVisible}
+                    title="删除"
+                    content="确认删除这条博客嘛？"
                 />
                 <Pagination
                     onShowSizeChange={this.onShowSizeChange.bind(this)}
@@ -125,10 +194,20 @@ const mapDispatchProps = dispatch => ({
                 all: "all"
             })
         );
+    },
+    fetchSingleArt: params => {
+        dispatch(fetchListData({ ...params }));
+    },
+    fetchTags: params => {
+        dispatch(setTags({ ...params }));
     }
 });
-const enhance = connect(
-    mapStateProps,
-    mapDispatchProps
+//多个高阶组件，用compose连接
+const enhance = compose(
+    withRouter,
+    connect(
+        mapStateProps,
+        mapDispatchProps
+    )
 );
 export default enhance(Article);

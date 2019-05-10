@@ -85,10 +85,10 @@ const service = option => {
         })
         .catch(error => {
             let res = error.response;
-            console.log("res.status", res);
-            console.log("notification", notification);
-            message.destroy();
-            if ((res.status = 401)) {
+            // console.log("res.status", res);
+            // console.log("notification", notification);
+            // message.destroy();
+            if (res.status == 401) {
                 message.info("登录信息失效，请重新登录").then(() => {
                     React.$store.dispatch(fedLogout());
                 });
