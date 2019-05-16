@@ -1,6 +1,8 @@
 import { Form, Input, Button, Select, Row, Col } from "antd";
 import React from "react";
+import { withRouter } from "react-router-dom";
 const { Option } = Select;
+
 class SearchComponent extends React.Component {
     handleSearch(e) {
         const _this = this;
@@ -10,6 +12,9 @@ class SearchComponent extends React.Component {
             _this.props.fetch({ ...values, ...pageCon });
         });
     }
+    // componentDidMount() {
+    //     console.log("searchform", this.props);
+    // }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -37,6 +42,15 @@ class SearchComponent extends React.Component {
                             <Button type="primary" htmlType="submit">
                                 查询
                             </Button>
+                            <Button
+                                type="primary"
+                                onClick={() =>
+                                    this.props.history.push("/article/edit")
+                                }
+                                style={{ float: "right" }}
+                            >
+                                新增文章
+                            </Button>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -49,4 +63,4 @@ const SearchConditions = Form.create({ name: "search_conditions" })(
     SearchComponent
 );
 
-export default SearchConditions;
+export default withRouter(SearchConditions);

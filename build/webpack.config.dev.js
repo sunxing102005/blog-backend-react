@@ -34,13 +34,17 @@ module.exports = merge(BaseConfig, {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            SERVER_HOST: JSON.stringify("")
+        }),
         new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
         new webpack.NoEmitOnErrorsPlugin(),
         // https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: paths.appHtml,
-            title: "React Demo",
+            title: "SUNX BLOG",
+            favicon: resolve("favicon.ico"),
             inject: true
         })
     ]

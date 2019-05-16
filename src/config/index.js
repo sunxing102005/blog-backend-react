@@ -1,3 +1,4 @@
 export default {
-    serverHost: "http://localhost:8362"
+    // eslint-disable-next-line
+    serverHost: SERVER_HOST
 };

@@ -21,7 +21,7 @@ export const routerConfig = [
                 ),
                 path: "/article/edit",
                 hidden: true,
-                name: "编辑博客"
+                name: "发布博客"
             }
         ]
     },

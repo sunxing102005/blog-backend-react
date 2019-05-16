@@ -67,15 +67,17 @@ const sidebar = class App extends React.Component {
                                         </span>
                                     }
                                 >
-                                    {route.children.map(child => {
-                                        return (
-                                            <Menu.Item key={child.path}>
-                                                <Link to={child.path}>
-                                                    {child.name}
-                                                </Link>
-                                            </Menu.Item>
-                                        );
-                                    })}
+                                    {route.children
+                                        .filter(item => !item.hidden)
+                                        .map(child => {
+                                            return (
+                                                <Menu.Item key={child.path}>
+                                                    <Link to={child.path}>
+                                                        {child.name}
+                                                    </Link>
+                                                </Menu.Item>
+                                            );
+                                        })}
                                 </SubMenu>
                             );
                         } else if (!route.hidden) {
