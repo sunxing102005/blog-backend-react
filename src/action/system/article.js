@@ -28,7 +28,12 @@ export function fetchListData(params) {
                 if (res.data instanceof Array) {
                     dispatch(setList(res));
                 } else {
-                    dispatch(changeArticle(res));
+                    dispatch(
+                        changeArticle({
+                            ...res,
+                            tag: res.tag.map(item => item.id)
+                        })
+                    );
                 }
             })
             .catch(err => {

@@ -19,3 +19,10 @@ export function addArticle(params, id) {
         data: params
     });
 }
+export function deleteFile(filepath) {
+    return service({
+        url: "/api/image",
+        method: "delete",
+        data: { filepath }
+    });
+}

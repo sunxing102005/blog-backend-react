@@ -6,7 +6,7 @@ import textInsert from "../helpers/insertText";
 import keydownListen from "../helpers/keydownListen";
 import "highlight.js/styles/tomorrow.css";
 import "../fonts/iconfont.css";
-
+import UploadImg from "@/components/common/UploadImg";
 class MdEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -17,6 +17,7 @@ class MdEditor extends React.Component {
         };
 
         this.state = {
+            visibleUpload: false,
             preview: false,
             expand: false,
             f_history: [],
@@ -65,10 +66,19 @@ class MdEditor extends React.Component {
             ? e.currentTarget.getAttribute("data-type")
             : e;
         textInsert($vm, type);
+        console.log("$vm.value", $vm.value);
         this.props.onChange($vm.value);
         this.saveHistory($vm.value);
     };
-
+    handleInsertImg = info => {
+        console.log("onOk");
+        this.setState({ visibleUpload: false });
+        const { $vm } = this;
+        const { url } = info[0];
+        textInsert($vm, "image", url);
+        this.props.onChange($vm.value);
+        this.saveHistory($vm.value);
+    };
     // 保存记录
     saveHistory(value) {
         let { f_history, f_history_index } = this.state;
@@ -239,7 +249,11 @@ class MdEditor extends React.Component {
                         </li>
                         <li
                             data-type="image"
-                            onClick={this.insert}
+                            // onClick={this.insert}
+                            onClick={() => {
+                                // console.log("lllll");
+                                this.setState({ visibleUpload: true });
+                            }}
                             title="图片"
                         >
                             <i className="foricon for-image" />
@@ -304,6 +318,11 @@ class MdEditor extends React.Component {
                         />
                     </div>
                 </div>
+                <UploadImg
+                    visible={this.state.visibleUpload}
+                    onConcel={() => (this.state.visibleUpload = false)}
+                    onOk={this.handleInsertImg}
+                />
             </div>
         );
     }

@@ -35,7 +35,7 @@ module.exports = merge(BaseConfig, {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
-            SERVER_HOST: JSON.stringify("")
+            SERVER_HOST: JSON.stringify("dev")
         }),
         new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
         new webpack.NoEmitOnErrorsPlugin(),

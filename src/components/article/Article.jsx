@@ -28,12 +28,13 @@ class Article extends React.Component {
     }
     onEdit(record) {
         const articleId = record.id;
-        this.props.fetchSingleArt({
-            id: articleId,
-            fn: () => {
-                this.props.history.push("/article/edit");
-            }
-        });
+        this.props.history.push("/article/edit?id=" + articleId);
+        // this.props.fetchSingleArt({
+        //     id: articleId,
+        //     fn: () => {
+        //         this.props.history.push("/article/edit?id=" + articleId);
+        //     }
+        // });
         // console.log("tt", tt);
     }
     onDelete(record) {
@@ -106,13 +107,11 @@ class Article extends React.Component {
             },
             {
                 title: "发布时间",
-                dataIndex: "create_time",
-                key: "create_time",
+                dataIndex: "modify_time",
+                key: "modify_time",
                 width: 200,
                 render: text => (
-                    <span className="resetTd TdWidth200">
-                        {date.toFormat(text * 1000, "yyyy-MM-dd")}
-                    </span>
+                    <span className="resetTd TdWidth200">{text}</span>
                 )
             },
             {

@@ -3,24 +3,26 @@ import {
     Form,
     Input,
     Select,
-    Row,
-    Col,
     DatePicker,
     Radio,
     Checkbox,
     message,
-    Button
+    Button,
+    Icon
 } from "antd";
 import { connect } from "react-redux";
+import date from "@/utils/date";
 import { setTags } from "@/action/system/article";
-import Editor from "for-editor";
-import { articleChange, articleClear } from "@/action/system/article";
-import remark from "remark";
-import reactRenderer from "remark-react";
+import {
+    articleChange,
+    articleClear,
+    fetchListData
+} from "@/action/system/article";
 import "./editArticle.less";
 import MdEditor from "@/components/common/markdownEditor/editor";
 import { addArticle } from "@/api/content";
-import moment from "moment";
+import UploadImg from "@/components/common/UploadImg";
+const qs = require("query-string");
 const { Option } = Select;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
@@ -29,50 +31,48 @@ class EditForm extends React.Component {
         super(props);
         this.markdownRef = React.createRef();
     }
-    state = {};
+    state = {
+        visibleUpload: false,
+        defaultFileList: []
+    };
     componentWillMount() {
         this.props.fetchTags({ type: "tag" });
+        const articleId = qs.parse(this.props.location.search).id;
+        if (articleId) {
+            this.props.fetchSingleArt({
+                id: articleId
+            });
+            // .then(() => {
+            //     if (this.props.thumb) {
+            //         this.setState({
+            //             defaultFileList: [
+            //                 { uid: "-1", url: this.props.thumb }
+            //             ]
+            //         });
+            //     }
+            // });
+        }
     }
     componentDidMount() {
         // let mark = this.markdownRef;
-        // console.log("mark", mark);
+        console.log("props", this.props);
     }
     handleSubmit = e => {
         e.preventDefault();
 
         let article = Object.assign({}, this.props.article.singleArticle);
+        console.log("article", article);
         let content = this.markdownRef.current.getMarkedHtml();
         article.content = content;
-        article.date = article.date._d;
-        console.log("article", article);
-        let seperator1 = "-";
-        let seperator2 = ":";
-        let month = article.date.getMonth() + 1;
-        let strDate = article.date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        article.create_time =
-            article.date.getFullYear() +
-            seperator1 +
-            month +
-            seperator1 +
-            strDate +
-            " " +
-            article.date.getHours() +
-            seperator2 +
-            article.date.getMinutes() +
-            seperator2 +
-            article.date.getSeconds();
+        let now = new Date();
+        let time = date.toFormat(now, "yyyy-MM-dd hh:mm:ss");
+        article.date = time;
         // 文章类型
         article.type = "post";
-        console.log("article", article);
+
         if (article.id) {
             addArticle(article, article.id).then(res => {
-                if (res.errno == 0 && res.data.id) {
+                if (res.id) {
                     message.success("修改成功!").then(() => {
                         this.props.history.push("/article/table");
                     });
@@ -80,8 +80,8 @@ class EditForm extends React.Component {
             });
         } else {
             addArticle(article).then(res => {
-                // debugger;
                 console.log("res", res);
+                console.log("::::！");
                 if (res.id) {
                     message.success("新增成功!").then(() => {
                         this.props.history.push("/article/table");
@@ -117,8 +117,26 @@ class EditForm extends React.Component {
         // // console.log("mark2html", html);
         this.props.changeArticle({ markdown: value });
     };
+    confirmUpload = imgArr => {
+        this.setState({ visibleUpload: false });
+        if (imgArr.length > 0) {
+            this.props.changeArticle({ thumb: imgArr[0].url });
+        } else {
+            this.props.changeArticle({ thumb: "" });
+        }
+    };
     render() {
         console.log("this.props", this.props);
+        // if (this.props.thumb) {
+        //     this.setState({
+        //         defaultFileList: [{ uid: "-1", url: this.props.thumb }]
+        //     });
+        //     console.log("defaultFileList", this.state.defaultFileList);
+        // }
+        let uploadBtnText = "上传图片";
+        if (this.props.thumb) {
+            uploadBtnText = "修改上传图片";
+        }
         const { getFieldDecorator } = this.props.form;
 
         const formItemLayout = {
@@ -140,7 +158,7 @@ class EditForm extends React.Component {
                 }
             }
         };
-        const checkedTagIds = this.props.tag.map(item => item.id);
+        const checkedTagIds = this.props.tag;
         const tagOptions = this.props.tags.map(item => ({
             label: item.name,
             value: item.id
@@ -183,16 +201,23 @@ class EditForm extends React.Component {
                         {getFieldDecorator("thumb", {
                             initialValue: this.props.thumb
                         })(
-                            <Input
-                                placeholder="请输入"
-                                autoComplete="off"
-                                onChange={e => {
-                                    this.onChangeInput("thumb", e);
+                            // <Input
+                            //     placeholder="请输入"
+                            //     autoComplete="off"
+                            //     onChange={e => {
+                            //         this.onChangeInput("thumb", e);
+                            //     }}
+                            // />
+                            <Button
+                                onClick={() => {
+                                    this.setState({ visibleUpload: true });
                                 }}
-                            />
+                            >
+                                {uploadBtnText}
+                            </Button>
                         )}
                     </Form.Item>
-                    <Form.Item label="发布时间">
+                    {/* <Form.Item label="发布时间">
                         {getFieldDecorator("date", {
                             initialValue: this.props.createTime
                                 ? moment(
@@ -207,7 +232,7 @@ class EditForm extends React.Component {
                                 }}
                             />
                         )}
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item label="文章分类">
                         {getFieldDecorator("category_id", {
                             initialValue: this.props.categoryId
@@ -261,6 +286,16 @@ class EditForm extends React.Component {
                         </Button>
                     </Form.Item>
                 </Form>
+                <UploadImg
+                    visible={this.state.visibleUpload}
+                    onConcel={() => {
+                        this.setState({ visibleUpload: false });
+                    }}
+                    onOk={this.confirmUpload}
+                    key={this.props.thumb}
+                    maxImgCount={1}
+                    defaultFileList={[{ uid: "-1", url: this.props.thumb }]}
+                />
             </div>
         );
     }
@@ -288,6 +323,9 @@ const mapDispatchProps = dispatch => ({
     },
     fetchTags: params => {
         dispatch(setTags({ ...params }));
+    },
+    fetchSingleArt: params => {
+        dispatch(fetchListData({ ...params }));
     }
 });
 const enhance = connect(

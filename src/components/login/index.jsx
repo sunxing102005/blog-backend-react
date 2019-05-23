@@ -18,12 +18,12 @@ class LoginForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             _this.props.login({
-                ...values,
-                errorFn: msg => {
-                    notification["Warning"]({
-                        message: msg
-                    });
-                }
+                ...values
+                // errorFn: msg => {
+                //     notification["Warning"]({
+                //         message: msg
+                //     });
+                // }
             });
         });
     };

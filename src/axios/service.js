@@ -44,15 +44,22 @@ const service = option => {
         } else {
             //针对参数类型是对象（包含数组）
             for (const key in sendData) {
-                if (typeof sendData[key] === "object") {
+                if (
+                    typeof sendData[key] === "object" &&
+                    !sendData[key] instanceof Array
+                ) {
                     sendData[key] = JSON.stringify(sendData[key]);
                 }
             }
-            sendData = qs.stringify(sendData);
+            // console.log("sendData", sendData);
+            // sendData = qs.stringify(sendData);
+            // console.log("sendData1", sendData);
             req.data = sendData;
         }
     } else if (req.method === "get") {
         req.params = sendData;
+    } else {
+        req.data = sendData;
     }
     if (getToken()) {
         req.headers = { access_token: getToken() };
@@ -71,6 +78,7 @@ const service = option => {
 
     return axios({ url, ...req, responseType })
         .then(res => {
+            console.log("res", res);
             const response = res.data;
             if (isBlob) {
                 return response;
@@ -85,16 +93,16 @@ const service = option => {
         })
         .catch(error => {
             let res = error.response;
-            // console.log("res.status", res);
-            // console.log("notification", notification);
-            // message.destroy();
             if (res.status == 401) {
                 message.info("登录信息失效，请重新登录").then(() => {
                     React.$store.dispatch(fedLogout());
                 });
             }
+            // message.error(error.message);
+            // return Promise.reject(error);
             req.callbackErrFn &&
                 req.callbackErrFn(res.message || "接口请求失败");
+            throw error.message;
         });
 };
 

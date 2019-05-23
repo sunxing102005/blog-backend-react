@@ -4,14 +4,13 @@ import {
     CLEAR_ARTICLE,
     SET_TAGS
 } from "../../actionTypes/article";
-
 const initState = {
     data: {},
     singleArticle: {
         title: "",
         sign: "",
         thumb: "",
-        date: "",
+        date: null,
         status: "",
         tag: [],
         markdown: "",
@@ -23,7 +22,7 @@ const emptyArticle = {
     title: "",
     sign: "",
     thumb: "",
-    date: "",
+    date: null,
     status: "",
     tag: [],
     markdown: "",
@@ -35,10 +34,11 @@ const articleReducer = (state = initState, action) => {
         case SEARCH_LIST:
             return Object.assign({}, state, { data: action.data });
         case CHANGE_ARTICLE: {
-            console.log("action", action);
+            console.log("action.data", action.data);
             const singleArticle = Object.assign({}, state.singleArticle, {
                 ...action.data
             });
+            console.log("singleArticle", singleArticle);
             return Object.assign({}, state, { singleArticle });
         }
         case CLEAR_ARTICLE:
