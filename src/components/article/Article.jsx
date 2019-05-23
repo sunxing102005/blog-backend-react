@@ -107,8 +107,8 @@ class Article extends React.Component {
             },
             {
                 title: "发布时间",
-                dataIndex: "modify_time",
-                key: "modify_time",
+                dataIndex: "publish_time",
+                key: "publish_time",
                 width: 200,
                 render: text => (
                     <span className="resetTd TdWidth200">{text}</span>

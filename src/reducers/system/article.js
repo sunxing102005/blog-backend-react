@@ -14,6 +14,7 @@ const initState = {
         status: "",
         tag: [],
         markdown: "",
+        recommend: "",
         create_time: null
     },
     tags: []
@@ -26,6 +27,7 @@ const emptyArticle = {
     status: "",
     tag: [],
     markdown: "",
+    recommend: "",
     create_time: null
 };
 const articleReducer = (state = initState, action) => {

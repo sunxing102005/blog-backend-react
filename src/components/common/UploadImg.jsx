@@ -58,9 +58,20 @@ class UploadImg extends React.Component {
     onRemove = params => {
         console.log("params", params);
         // const filepath = params.response.data["url"];
-        const title = `确定要删除图片 ${params.response.data["orgname"]}`;
+        const title = `确定要删除图片 ${
+            params.response ? params.response.data["orgname"] : ""
+        }吗`;
+        let deletefile = null;
+        if (params.response) {
+            deletefile = { ...params.response.data, uid: params.uid };
+        } else {
+            let urlIndex = params.url.indexOf("/uploads");
+            let url = params.url.substring(urlIndex);
+            deletefile = { ...params, url };
+            console.log("deletefile", deletefile);
+        }
         this.setState({
-            deletefile: { ...params.response.data, uid: params.uid },
+            deletefile,
             deleteTitle: title,
             delModalVisible: true
         });

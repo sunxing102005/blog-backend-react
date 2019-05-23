@@ -99,8 +99,8 @@ class EditForm extends React.Component {
 
         this.props.changeArticle(data);
     };
-    onChangeDate = e => {
-        this.props.changeArticle({ date: e });
+    onChangeRec = e => {
+        this.props.changeArticle({ recommend: e });
     };
     onChangeTags = e => {
         let tags = e;
@@ -184,30 +184,20 @@ class EditForm extends React.Component {
                             />
                         )}
                     </Form.Item>
-                    <Form.Item label="文章标示">
-                        {getFieldDecorator("sign", {
-                            initialValue: this.props.sign
+                    <Form.Item label="是否设为特别推荐">
+                        {getFieldDecorator("recommend", {
+                            initialValue: this.props.recommend
                         })(
-                            <Input
-                                placeholder="请输入文章标示"
-                                autoComplete="off"
-                                onChange={e => {
-                                    this.onChangeInput("sign", e);
-                                }}
-                            />
+                            <Select onChange={this.onChangeRec}>
+                                <Option value={"Y"}>是</Option>
+                                <Option value={"N"}>否</Option>
+                            </Select>
                         )}
                     </Form.Item>
                     <Form.Item label="缩略图">
                         {getFieldDecorator("thumb", {
                             initialValue: this.props.thumb
                         })(
-                            // <Input
-                            //     placeholder="请输入"
-                            //     autoComplete="off"
-                            //     onChange={e => {
-                            //         this.onChangeInput("thumb", e);
-                            //     }}
-                            // />
                             <Button
                                 onClick={() => {
                                     this.setState({ visibleUpload: true });
@@ -217,22 +207,6 @@ class EditForm extends React.Component {
                             </Button>
                         )}
                     </Form.Item>
-                    {/* <Form.Item label="发布时间">
-                        {getFieldDecorator("date", {
-                            initialValue: this.props.createTime
-                                ? moment(
-                                      new Date(this.props.createTime * 1000),
-                                      "YYYY-MM"
-                                  )
-                                : null
-                        })(
-                            <DatePicker
-                                onChange={e => {
-                                    this.onChangeDate(e);
-                                }}
-                            />
-                        )}
-                    </Form.Item> */}
                     <Form.Item label="文章分类">
                         {getFieldDecorator("category_id", {
                             initialValue: this.props.categoryId
@@ -294,7 +268,11 @@ class EditForm extends React.Component {
                     onOk={this.confirmUpload}
                     key={this.props.thumb}
                     maxImgCount={1}
-                    defaultFileList={[{ uid: "-1", url: this.props.thumb }]}
+                    defaultFileList={
+                        this.props.thumb
+                            ? [{ uid: "-1", url: this.props.thumb }]
+                            : []
+                    }
                 />
             </div>
         );
@@ -312,6 +290,7 @@ const mapStateProps = state => ({
     tags: state.article.tags,
     categoryId: state.article.singleArticle.category_id,
     createTime: state.article.singleArticle.create_time,
+    recommend: state.article.singleArticle.recommend,
     markdown: state.article.singleArticle.markdown
 });
 const mapDispatchProps = dispatch => ({
