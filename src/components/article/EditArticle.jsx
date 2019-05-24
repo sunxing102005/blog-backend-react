@@ -61,7 +61,7 @@ class EditForm extends React.Component {
         e.preventDefault();
 
         let article = Object.assign({}, this.props.article.singleArticle);
-        console.log("article", article);
+
         let content = this.markdownRef.current.getMarkedHtml();
         article.content = content;
         let now = new Date();
@@ -69,7 +69,7 @@ class EditForm extends React.Component {
         article.date = time;
         // 文章类型
         article.type = "post";
-
+        console.log("article", article);
         if (article.id) {
             addArticle(article, article.id).then(res => {
                 if (res.id) {

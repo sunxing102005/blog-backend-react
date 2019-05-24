@@ -1,6 +1,9 @@
 import { Form, Input, Button, Select, Row, Col } from "antd";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { articleClear } from "../../action/system/article";
+import { connect } from "react-redux";
+import { compose } from "redux";
 const { Option } = Select;
 
 class SearchComponent extends React.Component {
@@ -12,6 +15,10 @@ class SearchComponent extends React.Component {
             _this.props.fetch({ ...values, ...pageCon });
         });
     }
+    addArticle = () => {
+        this.props.clearPropsArticle();
+        this.props.history.push("/article/edit");
+    };
     // componentDidMount() {
     //     console.log("searchform", this.props);
     // }
@@ -44,9 +51,7 @@ class SearchComponent extends React.Component {
                             </Button>
                             <Button
                                 type="primary"
-                                onClick={() =>
-                                    this.props.history.push("/article/edit")
-                                }
+                                onClick={this.addArticle}
                                 style={{ float: "right" }}
                             >
                                 新增文章
@@ -58,9 +63,21 @@ class SearchComponent extends React.Component {
         );
     }
 }
+const mapStateProps = state => ({});
+const mapDispatchProps = dispatch => ({
+    clearPropsArticle: () => {
+        dispatch(articleClear());
+    }
+});
 
 const SearchConditions = Form.create({ name: "search_conditions" })(
     SearchComponent
 );
-
-export default withRouter(SearchConditions);
+const enhance = compose(
+    withRouter,
+    connect(
+        mapStateProps,
+        mapDispatchProps
+    )
+);
+export default enhance(SearchConditions);
