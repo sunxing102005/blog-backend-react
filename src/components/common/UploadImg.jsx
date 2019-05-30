@@ -103,7 +103,25 @@ class UploadImg extends React.Component {
                 message.success("删除成功！");
             })
             .catch(err => {
-                console.log("UUU");
+                this.setState(preState => {
+                    let delIndex = 0;
+                    preState.fileList.forEach((item, index) => {
+                        console.log(
+                            "preState.deletefile.uid",
+                            preState.deletefile.uid
+                        );
+                        if (item.uid === preState.deletefile.uid) {
+                            delIndex = index;
+                        }
+                    });
+                    let newFileList = [...preState.fileList];
+                    newFileList.splice(delIndex, 1);
+                    return {
+                        fileList: [...newFileList],
+                        delModalVisible: false
+                    };
+                });
+                // console.log("UUU");
                 message.error(err);
             });
     };

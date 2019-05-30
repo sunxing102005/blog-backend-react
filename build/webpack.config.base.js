@@ -241,11 +241,6 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new MiniCssExtractPlugin({
-            filename: `static/${projectName}/css/[name]-css-[hash:5].css`
-        })
-    ],
     stats: {
         warningsFilter: warning => /Conflicting order between/gm.test(warning)
     },

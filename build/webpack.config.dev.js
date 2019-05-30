@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const paths = require("./paths");
 const path = require("path");
 const BaseConfig = require("./webpack.config.base.js");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const config = require("../config");
 function resolve(dir) {
     return path.join(__dirname, "..", dir);
@@ -33,6 +34,9 @@ module.exports = merge(BaseConfig, {
         // }
     },
     plugins: [
+        new MiniCssExtractPlugin({
+            filename: `static/${projectName}/css/[name]-css-[hash:5].css`
+        }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             SERVER_HOST: JSON.stringify("dev")

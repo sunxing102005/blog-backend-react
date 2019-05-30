@@ -12,6 +12,7 @@ const safePostCssParser = require("postcss-safe-parser");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const projectName = require("../package.json").name;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 function resolve(dir) {
     return path.join(__dirname, "..", dir);
 }
@@ -20,7 +21,12 @@ const shouldUseSourceMap = false;
 module.exports = merge(BaseConfig, {
     mode: "production",
     devtool: "#source-map",
-
+    output: {
+        filename: "static/" + projectName + "/js/[name]-[hash:5].js",
+        path: resolve("../../../think-js/projects/self-blog/www"),
+        publicPath: "/",
+        chunkFilename: "static/" + projectName + "/js/[name].[hash:5].chunk.js"
+    },
     optimization: {
         minimizer: [
             new TerserPlugin({
@@ -78,12 +84,18 @@ module.exports = merge(BaseConfig, {
         runtimeChunk: true
     },
     plugins: [
+        new MiniCssExtractPlugin({
+            filename: `static/${projectName}/css/[name]-css-[hash:5].css`
+            // path: resolve("../../../think-js/projects/self-blog-backend/www")
+        }),
         new webpack.DefinePlugin({
             SERVER_HOST: JSON.stringify("prd")
         }),
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: ["**/static/" + projectName]
+        }),
         new HtmlWebpackPlugin({
-            filename: `./view/${projectName}/backend_index.html`,
+            filename: `../view/${projectName}/backend_index.html`,
             template: paths.appHtml,
             favicon: resolve("favicon.ico"),
             title: "系统",

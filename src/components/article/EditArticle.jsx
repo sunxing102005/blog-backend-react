@@ -10,6 +10,7 @@ import {
     Button,
     Icon
 } from "antd";
+import config from "@/config";
 import { connect } from "react-redux";
 import date from "@/utils/date";
 import { setTags } from "@/action/system/article";
@@ -282,7 +283,10 @@ const EditFormWrap = Form.create({ name: "edit-form" })(EditForm);
 const mapStateProps = state => ({
     title: state.article.singleArticle.title,
     sign: state.article.singleArticle.sign,
-    thumb: state.article.singleArticle.thumb,
+    thumb:
+        state.article.singleArticle.thumb.indexOf("http") == -1
+            ? config.serverHost + state.article.singleArticle.thumb
+            : state.article.singleArticle.thumb,
     date: state.article.singleArticle.date,
     status: state.article.singleArticle.status,
     tag: state.article.singleArticle.tag,
