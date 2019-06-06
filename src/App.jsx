@@ -34,6 +34,7 @@ class App extends React.Component {
             <LocaleProvider locale={zhCN}>
                 <Router>
                     <div>
+                        <RouterGurad config={[]} />
                         <Switch>
                             <Route
                                 path="/login"
@@ -43,7 +44,6 @@ class App extends React.Component {
                             <Route path="/" component={SelftLayout} key="/" />
                             <Route path="*" component={notFound} key="*" />
                         </Switch>
-                        <RouterGurad config={[]} />
                     </div>
                 </Router>
             </LocaleProvider>

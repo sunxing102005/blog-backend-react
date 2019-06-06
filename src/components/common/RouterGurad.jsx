@@ -9,7 +9,7 @@ class RouterGurad extends React.Component {
         const { pathname } = location;
         const token = getToken();
         const targetRouterConfig = config.find(v => v.path === pathname);
-        // console.log("token", token);
+        console.log("token", token);
         if (token) {
             if (pathname === "/login") {
                 return <Redirect to="/" />;

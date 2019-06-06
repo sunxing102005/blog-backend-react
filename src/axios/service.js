@@ -62,7 +62,7 @@ const service = option => {
         req.data = sendData;
     }
     if (getToken()) {
-        req.headers = { access_token: getToken() };
+        req.headers = { accesstoken: getToken() };
     }
     /*
     else {
