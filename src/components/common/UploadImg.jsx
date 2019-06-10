@@ -44,7 +44,7 @@ class UploadImg extends React.Component {
         let retFileList = this.state.fileList.map(item => {
             return {
                 ...item.response.data,
-                url: config.serverHost + item.response.data.url
+                url: item.response.data.url
             };
         });
         // const url = config.serverHost + this.state.uploadImg.url;
@@ -79,6 +79,7 @@ class UploadImg extends React.Component {
     };
     onRemoveConfirm = () => {
         const filepath = this.state.deletefile.url;
+        console.log("this.state.deletefile", this.state.deletefile);
         deleteFile(filepath)
             .then(() => {
                 this.setState(preState => {
@@ -121,7 +122,6 @@ class UploadImg extends React.Component {
                         delModalVisible: false
                     };
                 });
-                // console.log("UUU");
                 message.error(err);
             });
     };

@@ -26,3 +26,10 @@ export function deleteFile(filepath) {
         data: { filepath }
     });
 }
+export function deleteTag(id) {
+    return service({
+        url: "/api/meta",
+        method: "delete",
+        data: { id }
+    });
+}

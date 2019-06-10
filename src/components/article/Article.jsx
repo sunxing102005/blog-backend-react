@@ -9,7 +9,6 @@ import Confirm from "../common/Confirm";
 import { deleteArticle } from "@/api/content";
 import { withRouter } from "react-router-dom";
 import { compose } from "redux";
-import date from "@/utils/date";
 class Article extends React.Component {
     state = {
         total: 0,

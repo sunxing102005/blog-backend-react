@@ -22,16 +22,23 @@ export const routerConfig = [
                 path: "/article/edit",
                 hidden: true,
                 name: "发布博客"
+            },
+            {
+                main: AsyncComponent(() =>
+                    import("@/components/tag/TagManage")
+                ),
+                path: "/article/tag",
+                name: "标签管理"
             }
         ]
     },
-    {
-        meta: { icon: "bookmark", expanded: false },
-        main: AsyncComponent(() => import("@/components/news/News")),
-        path: "/news",
-        hidden: false,
-        name: "新闻"
-    },
+    // {
+    //     meta: { icon: "bookmark", expanded: false },
+    //     main: AsyncComponent(() => import("@/components/news/News")),
+    //     path: "/news",
+    //     hidden: false,
+    //     name: "新闻"
+    // },
     {
         meta: { expanded: false },
         main: AsyncComponent(() => import("@/components/dashBoard/Dashboard")),

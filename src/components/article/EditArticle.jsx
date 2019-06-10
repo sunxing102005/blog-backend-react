@@ -126,6 +126,9 @@ class EditForm extends React.Component {
             this.props.changeArticle({ thumb: "" });
         }
     };
+    toContent = () => {
+        this.props.history.push("/article/table");
+    };
     render() {
         console.log("this.props", this.props);
         // if (this.props.thumb) {
@@ -135,7 +138,7 @@ class EditForm extends React.Component {
         //     console.log("defaultFileList", this.state.defaultFileList);
         // }
         let uploadBtnText = "上传图片";
-        if (this.props.thumb) {
+        if (this.props.thumb && this.props.thumb != config.serverHost) {
             uploadBtnText = "修改上传图片";
         }
         const { getFieldDecorator } = this.props.form;
@@ -259,6 +262,13 @@ class EditForm extends React.Component {
                         <Button type="primary" htmlType="submit">
                             确定
                         </Button>
+                        <Button
+                            type="primary"
+                            style={{ marginLeft: "20px" }}
+                            onClick={this.toContent}
+                        >
+                            取消
+                        </Button>
                     </Form.Item>
                 </Form>
                 <UploadImg
@@ -270,7 +280,8 @@ class EditForm extends React.Component {
                     key={this.props.thumb}
                     maxImgCount={1}
                     defaultFileList={
-                        this.props.thumb
+                        this.props.thumb &&
+                        this.props.thumb != config.serverHost
                             ? [{ uid: "-1", url: this.props.thumb }]
                             : []
                     }
@@ -283,10 +294,7 @@ const EditFormWrap = Form.create({ name: "edit-form" })(EditForm);
 const mapStateProps = state => ({
     title: state.article.singleArticle.title,
     sign: state.article.singleArticle.sign,
-    thumb:
-        state.article.singleArticle.thumb.indexOf("http") == -1
-            ? config.serverHost + state.article.singleArticle.thumb
-            : state.article.singleArticle.thumb,
+    thumb: state.article.singleArticle.thumb,
     date: state.article.singleArticle.date,
     status: state.article.singleArticle.status,
     tag: state.article.singleArticle.tag,
