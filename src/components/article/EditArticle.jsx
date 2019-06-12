@@ -218,6 +218,7 @@ class EditForm extends React.Component {
                             <Select onChange={this.onChangeCate}>
                                 <Option value={1}>tech</Option>
                                 <Option value={2}>life</Option>
+                                <Option value={2}>life</Option>
                             </Select>
                         )}
                     </Form.Item>

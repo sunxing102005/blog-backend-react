@@ -1,68 +1,57 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 简介
 
-## Available Scripts
+#### 这是 React 搭建个人博客网站的一部分。网站主要分为两部分
 
-In the project directory, you can run:
+-   博客前台页面
+    ![在这里插入图片描述](http://cdn.sunx.club/blog-fontend-gif-sm.gif)
+-   博客后台页面
+    ![在这里插入图片描述](http://cdn.sunx.club/blog-backend-gif.gif)
 
-### `npm start`
+#### 本项目是后台页面的前端部分。
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### 整个博客网站包含内容有
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+**_前端部分_**
 
-### `npm test`
+-   [x] React
+-   [x] React-Router4.0
+-   [x] Redux
+-   [x] AntDesign
+-   [x] webpack4
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**_后端部分_**
 
-### `npm run build`
+-   [x] consul+consul-template+nginx+docker 搭建微服务
+-   [x] cdn 上传静态资源
+-   [x] thinkJs
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**_部署部分_**
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+-   [x] daocloud 自动化部署
+-   [x] Prometheus+Grafana 监控系统
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### 想要详细了解博客的搭建过程与相关问题，可以查看
 
-### `npm run eject`
+-   线上个人博客（即这个项目做出来的成果），[点这里](http://www.sunx.club/)
+-   csdn 博客，[点这里](https://blog.csdn.net/qq_36228442)，查看 React 搭建博客系列。
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 服务启动
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+npm install
+npm run start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+本项目开发环境是使用 webpack 的 devserver，启动前端服务，访问后端接口
+对应的后端项目 [点这里](https://github.com/sunxing102005/self-blog-backend)。
+启动本项目之前须先启动后端 self-blog-backend 项目。
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### 服务打包
 
-## Learn More
+-   项目打包生成路径，是本人计算机对的的服务端项目 self-blog-backend 的 www 文件夹，view 文件夹，
+    具体路径须根据自身两个项目的相对路径改写。
+-   打包后，启动后端服务，访问http://localhost:8362，就能访问博客后台管理页面。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 项目部署
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+本项目不直接参与线上部署，而是先打包到后端项目中，将后端制作为镜像，在服务器端生成容器。具体部署细节会在上述博客网站尽快更新。

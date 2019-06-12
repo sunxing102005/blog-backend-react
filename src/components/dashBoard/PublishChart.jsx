@@ -18,7 +18,7 @@ class PublishChart extends React.Component {
             let seriesData = [];
             let max = 10;
             for (let i in res) {
-                let date = new Date(res[i].create_time * 1000);
+                let date = new Date(res[i].create_time);
                 let key =
                     date.getFullYear() +
                     "-" +

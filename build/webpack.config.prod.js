@@ -23,7 +23,7 @@ module.exports = merge(BaseConfig, {
     devtool: "#source-map",
     output: {
         filename: "static/" + projectName + "/js/[name]-[hash:5].js",
-        path: resolve("../../../think-js/projects/self-blog/www"),
+        path: resolve("../../../think-js/projects/self-blog-backend/www"),
         publicPath: "/",
         chunkFilename: "static/" + projectName + "/js/[name].[hash:5].chunk.js"
     },
@@ -86,7 +86,6 @@ module.exports = merge(BaseConfig, {
     plugins: [
         new MiniCssExtractPlugin({
             filename: `static/${projectName}/css/[name]-css-[hash:5].css`
-            // path: resolve("../../../think-js/projects/self-blog-backend/www")
         }),
         new webpack.DefinePlugin({
             SERVER_HOST: JSON.stringify("prd")

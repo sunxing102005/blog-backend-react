@@ -4,8 +4,9 @@ import BasicTable from "../common/BasicTable";
 import Confirm from "../common/Confirm";
 import { connect } from "react-redux";
 import { fetchTags } from "../../action/system/tag";
-import { deleteTag } from "@/api/content";
+import { deleteTag, postTag } from "@/api/content";
 import Pagination from "../common/Pagination";
+import date from "@/utils/date";
 const { Option } = Select;
 class TagManage extends React.Component {
     state = {
@@ -14,7 +15,8 @@ class TagManage extends React.Component {
         editTag: {},
         delModelVisible: false,
         pageSize: 10,
-        page: 1
+        page: 1,
+        delId: ""
     };
 
     componentWillMount() {
@@ -23,38 +25,87 @@ class TagManage extends React.Component {
             page: this.state.page
         });
     }
-    onEdit = record => {
+    onEdit = (record = {}) => {
         console.log("record", record);
-        this.setState({ editTag: record, editVisible: true });
+        this.setState({ editTag: record }, () => {
+            console.log("editTag", this.state.editTag);
+            console.log("editVisible", this.state.editVisible);
+            this.setState({ editVisible: true });
+        });
+        // this.setState({ editTag: record, editVisible: true });
     };
     onPageChange(page) {
         this.setState({ page });
-        this.fetch({ page, pageSize: this.state.pageSize });
+        this.props.fetchData({ page, pageSize: this.state.pageSize });
     }
     onDelete = record => {
-        deleteTag({ id: record.id })
+        this.setState({ delId: record.id });
+        this.setState({ delModelVisible: true });
+    };
+    onDeleteConfirm = () => {
+        console.log("this.state.delId", this.state.delId);
+        deleteTag({ id: this.state.delId })
             .then(res => {
                 message.success("删除成功！");
-                this.props.fetchData();
+                this.setState({ delModelVisible: false, page: 1 });
+                this.props.fetchData({
+                    pageSize: this.state.pageSize,
+                    page: 1
+                });
             })
             .catch(err => {
+                console.log("onDeleteConfirm", err);
                 message.error(err);
             });
     };
-    onShowSizeChange(pageSize) {
+    onShowSizeChange(page, pageSize) {
         this.setState({ pageSize });
-        this.fetch({ page: 1, pageSize });
+        this.props.fetchData({ page: 1, pageSize });
     }
+    editName = e => {
+        let name = e.target.value;
+        this.setState(preState => {
+            return { editTag: { ...preState.editTag, name } };
+        });
+    };
+    editType = e => {
+        let type = e;
+        this.setState(preState => {
+            return { editTag: { ...preState.editTag, type } };
+        });
+    };
+    confirmEdit = () => {
+        let now = new Date();
+        let time = date.toFormat(now, "yyyy-MM-dd hh:mm:ss");
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                postTag({ ...this.state.editTag, date: time })
+                    .then(res => {
+                        message.success("保存成功！");
+                        this.setState({ editVisible: false, page: 1 });
+                        this.props.form.resetFields(); //重置form
+                        this.props.fetchData({
+                            pageSize: this.state.pageSize,
+                            page: 1
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        message.error(err);
+                    });
+            }
+        });
+    };
     render() {
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
-                sm: { span: 8 }
+                sm: { span: 5 }
             },
             wrapperCol: {
                 xs: { span: 24 },
-                sm: { span: 16 }
+                sm: { span: 19 }
             }
         };
         console.log("this.props", this.props);
@@ -117,9 +168,22 @@ class TagManage extends React.Component {
                 )
             }
         ];
+        const id = this.state.editTag.id;
+        const name = this.state.editTag.name;
+        const type = this.state.editTag.type;
+        console.log("name", name);
         return (
             <div>
-                <Button style={{ float: "right" }}>新增标签</Button>
+                <div style={{ width: "100%", overflow: "hidden" }}>
+                    <Button
+                        style={{ float: "right", margin: "20px 20px" }}
+                        onClick={() => {
+                            this.onEdit();
+                        }}
+                    >
+                        新增标签
+                    </Button>
+                </div>
                 <BasicTable
                     columns={columns}
                     data={dataSource}
@@ -127,7 +191,7 @@ class TagManage extends React.Component {
                     tableLoading={this.state.tableLoading}
                 />
                 <Confirm
-                    handleConfirm={this.handleConfirm}
+                    handleConfirm={this.onDeleteConfirm}
                     handleCancel={() => {
                         this.setState({ delModelVisible: false });
                     }}
@@ -142,25 +206,51 @@ class TagManage extends React.Component {
                     pageSize={this.state.pageSize}
                     current={this.state.page}
                 />
-                <Modal visible={this.state.editVisible} title="编辑标签">
-                    <Form {...formItemLayout}>
-                        <Form.Item>
-                            {getFieldDecorator("id", {
-                                initialValue: this.state.editTag.id
-                            })(<Input disabled />)}
-                        </Form.Item>
-                        <Form.Item>
+                <Modal
+                    visible={this.state.editVisible}
+                    onCancel={() => {
+                        this.setState({ editVisible: false });
+                    }}
+                    title="标签"
+                    onOk={this.confirmEdit}
+                >
+                    <Form {...formItemLayout} key={id}>
+                        {id ? (
+                            <Form.Item label="ID">
+                                {getFieldDecorator("id", {
+                                    initialValue: id
+                                })(<Input disabled />)}
+                            </Form.Item>
+                        ) : (
+                            ""
+                        )}
+
+                        <Form.Item label="标签名">
                             {getFieldDecorator("name", {
-                                initialValue: this.state.editTag.name
-                            })(<Input />)}
-                        </Form.Item>
-                        <Form.Item>
-                            {getFieldDecorator("type", {
-                                initialValue: this.state.editTag.type
+                                initialValue: name,
+                                rules: [
+                                    { required: true, message: "请输入标签名" }
+                                ]
                             })(
-                                <Select onChange={this.onChangeCate}>
+                                <Input
+                                    onChange={this.editName}
+                                    autoComplete="off"
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item label="标签类型">
+                            {getFieldDecorator("type", {
+                                initialValue: type,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: "请输入标签类型"
+                                    }
+                                ]
+                            })(
+                                <Select onChange={this.editType}>
                                     <Option value={"category"}>category</Option>
-                                    <Option value={"tag"}>category</Option>
+                                    <Option value={"tag"}>tag</Option>
                                 </Select>
                             )}
                         </Form.Item>

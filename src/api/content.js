@@ -26,10 +26,17 @@ export function deleteFile(filepath) {
         data: { filepath }
     });
 }
-export function deleteTag(id) {
+export function deleteTag(params) {
     return service({
         url: "/api/meta",
         method: "delete",
-        data: { id }
+        data: params
+    });
+}
+export function postTag(params) {
+    return service({
+        url: "/api/meta",
+        method: "post",
+        data: params
     });
 }

@@ -83,9 +83,11 @@ const service = option => {
             if (isBlob) {
                 return response;
             }
-            if (response.data.errno) {
-                let errmsg = response.data.errmsg;
-                req.callbackErrFn(errmsg || "接口请求失败");
+            console.log("response.data", response);
+            if (response.errno) {
+                let errmsg = response.errmsg;
+                req.callbackFn && req.callbackErrFn(errmsg || "接口请求失败");
+                throw errmsg;
             } else {
                 req.callbackFn && req.callbackFn(response.data);
                 return response.data;
@@ -93,16 +95,16 @@ const service = option => {
         })
         .catch(error => {
             let res = error.response;
-            if (res.status == 401) {
+            console.error(" service error:", error);
+            if (res && res.status == 401) {
                 message.info("登录信息失效，请重新登录").then(() => {
                     React.$store.dispatch(fedLogout());
                 });
             }
-            // message.error(error.message);
-            // return Promise.reject(error);
-            req.callbackErrFn &&
+            req &&
+                req.callbackErrFn &&
                 req.callbackErrFn(res.message || "接口请求失败");
-            throw error.message;
+            return Promise.reject(error);
         });
 };
 
