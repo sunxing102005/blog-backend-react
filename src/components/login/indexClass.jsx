@@ -1,17 +1,8 @@
 import React from "react";
-import {
-    Form,
-    Icon,
-    Input,
-    Button,
-    Checkbox,
-    notification,
-    Layout
-} from "antd";
+import { Form, Icon, Input, Button } from "antd";
 import "./index.less";
 import { login } from "@/action/system/login";
 import { connect } from "react-redux";
-const { Content } = Layout;
 class LoginForm extends React.Component {
     handleSubmit = e => {
         const _this = this;
@@ -87,7 +78,6 @@ class LoginForm extends React.Component {
                         })(<Checkbox>Remeber me</Checkbox>)} */}
                     <div className="tips">
                         <span>账户: admin</span>
-                        <span> 密码: 123456</span>
                     </div>
                     <Button type="primary" htmlType="submit" className="button">
                         登录
@@ -116,4 +106,4 @@ const enhance = connect(
     mapStateProps,
     mapDispatchProps
 );
-export default enhance(WrappedNormalLoginForm);
+export default WrappedNormalLoginForm;

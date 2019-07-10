@@ -79,7 +79,7 @@ class Article extends React.Component {
                 title: "文章名称",
                 dataIndex: "title",
                 key: "title",
-                width: 200,
+                width: 400,
                 render: text => (
                     <span className="resetTd TdWidth200">{text}</span>
                 )
@@ -117,7 +117,7 @@ class Article extends React.Component {
                 title: "阅读量",
                 dataIndex: "view",
                 key: "view",
-                width: 200,
+                width: 100,
                 render: text => (
                     <span className="resetTd TdWidth200">{text}</span>
                 )

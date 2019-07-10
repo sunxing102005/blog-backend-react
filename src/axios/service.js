@@ -75,10 +75,11 @@ const service = option => {
     */
 
     console.log("url:", url);
-
+    window.Pace.start(); //开始顶部进度条
     return axios({ url, ...req, responseType })
         .then(res => {
             console.log("res", res);
+            window.Pace.stop(); //结束顶部进度条
             const response = res.data;
             if (isBlob) {
                 return response;

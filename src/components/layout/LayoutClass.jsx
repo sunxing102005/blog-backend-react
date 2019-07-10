@@ -105,17 +105,13 @@ class MainLayout extends React.Component {
         );
     }
 }
-const mapStateProps = state => ({
-    data: state.article.data,
-    total: state.article.data.count
-});
 const mapDispatchProps = dispatch => ({
     logout: () => {
         dispatch(fedLogout());
     }
 });
 const enhance = connect(
-    mapStateProps,
+    {},
     mapDispatchProps
 );
 export default enhance(MainLayout);

@@ -4,14 +4,15 @@ import "./index.css";
 import "font-awesome/css/font-awesome.min.css";
 import App from "./App";
 import { Provider } from "react-redux";
+import { StoreContext } from "redux-react-hook";
 import configureStore from "./store";
 import * as serviceWorker from "./serviceWorker";
 const store = configureStore();
 React.$store = store;
 ReactDOM.render(
-    <Provider store={store}>
+    <StoreContext.Provider value={store}>
         <App />
-    </Provider>,
+    </StoreContext.Provider>,
     document.getElementById("root")
 );
 

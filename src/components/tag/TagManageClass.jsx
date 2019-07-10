@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, message, Modal, Form, Input, Select, Row, Col } from "antd";
+import { Button, message, Modal, Form, Input, Select } from "antd";
 import BasicTable from "../common/BasicTable";
 import Confirm from "../common/Confirm";
 import { connect } from "react-redux";

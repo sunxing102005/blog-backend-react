@@ -1,4 +1,5 @@
 import AsyncComponent from "./asyncComponent";
+import { lazy } from "react";
 export const routerConfig = [
     {
         meta: { icon: "profile", expanded: false },
@@ -9,24 +10,18 @@ export const routerConfig = [
         children: [
             {
                 meta: { expanded: false },
-                main: AsyncComponent(() =>
-                    import("@/components/article/Article")
-                ),
+                main: lazy(() => import("@/components/article/Article")),
                 path: "/article/table",
                 name: "博客管理"
             },
             {
-                main: AsyncComponent(() =>
-                    import("@/components/article/EditArticle")
-                ),
+                main: lazy(() => import("@/components/article/EditArticle")),
                 path: "/article/edit",
                 hidden: true,
                 name: "发布博客"
             },
             {
-                main: AsyncComponent(() =>
-                    import("@/components/tag/TagManage")
-                ),
+                main: lazy(() => import("@/components/tag/TagManage")),
                 path: "/article/tag",
                 name: "标签管理"
             }
@@ -41,7 +36,7 @@ export const routerConfig = [
     // },
     {
         meta: { expanded: false },
-        main: AsyncComponent(() => import("@/components/dashBoard/Dashboard")),
+        main: lazy(() => import("@/components/dashBoard/Dashboard")),
         path: "/",
         hidden: true,
         name: "首页"
