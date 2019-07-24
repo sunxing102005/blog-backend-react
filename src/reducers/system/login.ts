@@ -1,10 +1,10 @@
-import { SEARCH_LIST } from "../../actionTypes/article";
-
-const initState = {
+import { ChatState } from "@/storeTypes/login";
+import { loginTypes } from "@/storeTypes/login";
+const initState: ChatState = {
     token: "",
     name: ""
 };
-const articleReducer = (state = initState, action) => {
+const articleReducer = (state: ChatState = initState, action: loginTypes) => {
     const type = action.type;
     switch (type) {
         case "SET_TOKEN":

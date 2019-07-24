@@ -11,3 +11,4 @@ export const rootReducer = asyncReducers => {
 };
 
 export default rootReducer;
+// export type AppState = ReturnType<typeof rootReducer>;

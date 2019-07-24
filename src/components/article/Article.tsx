@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { fetchListData, setTags } from "../../action/system/article";
 import { connect } from "react-redux";
 import { Button, message } from "antd";
@@ -6,18 +6,42 @@ import BasicTable from "../common/BasicTable";
 import Pagination from "../common/Pagination";
 import SearchForm from "../searchForm/article";
 import Confirm from "../common/Confirm";
-import { deleteArticle } from "@/api/content";
-import { withRouter } from "react-router-dom";
+import { deleteArticle } from "../../api/content";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { compose } from "redux";
-class Article extends React.Component {
-    state = {
-        total: 0,
-        pageSize: 10,
-        page: 1,
-        tableLoading: false,
-        delModelVisible: false,
-        currentRecord: {}
-    };
+import { bindActionCreators, Dispatch } from "redux";
+import Types from "MyTypes";
+const mapStateProps = (state: Types.RootState) => ({
+    data: state.article.data,
+    total: state.article.data.count
+});
+const mapDispatchProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            fetchData: (parmas: object) =>
+                fetchListData({
+                    ...parmas,
+                    all: "all"
+                }),
+            fetchSingleArt: (params: object) => fetchListData({ ...params }),
+            fetchTags: (params: object) => setTags({ ...params })
+        },
+        dispatch
+    );
+type Props = RouteComponentProps &
+    ReturnType<typeof mapDispatchProps> &
+    ReturnType<typeof mapStateProps>;
+const state = {
+    total: 0,
+    pageSize: 10,
+    page: 1,
+    tableLoading: false,
+    delModelVisible: false,
+    currentRecord: { id: "" }
+};
+
+class Article extends React.Component<Props, typeof state> {
+    state = state;
     componentWillMount() {
         this.fetch({
             pageSize: this.state.pageSize,
@@ -28,13 +52,6 @@ class Article extends React.Component {
     onEdit(record) {
         const articleId = record.id;
         this.props.history.push("/article/edit?id=" + articleId);
-        // this.props.fetchSingleArt({
-        //     id: articleId,
-        //     fn: () => {
-        //         this.props.history.push("/article/edit?id=" + articleId);
-        //     }
-        // });
-        // console.log("tt", tt);
     }
     onDelete(record) {
         this.setState({ delModelVisible: true, currentRecord: record });
@@ -192,27 +209,7 @@ class Article extends React.Component {
         );
     }
 }
-const mapStateProps = state => ({
-    data: state.article.data,
-    total: state.article.data.count
-});
-const mapDispatchProps = dispatch => ({
-    fetchData: params => {
-        console.log("this", this);
-        dispatch(
-            fetchListData({
-                ...params,
-                all: "all"
-            })
-        );
-    },
-    fetchSingleArt: params => {
-        dispatch(fetchListData({ ...params }));
-    },
-    fetchTags: params => {
-        dispatch(setTags({ ...params }));
-    }
-});
+
 //多个高阶组件，用compose连接
 const enhance = compose(
     withRouter,

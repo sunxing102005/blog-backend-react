@@ -4,7 +4,12 @@ import {
     CLEAR_ARTICLE,
     SET_TAGS
 } from "../../actionTypes/article";
-const initState = {
+import {
+    articleActionTypes,
+    articleType,
+    articleState
+} from "../../storeTypes/article";
+const initState: articleState = {
     data: {},
     singleArticle: {
         title: "",
@@ -19,7 +24,7 @@ const initState = {
     },
     tags: []
 };
-const emptyArticle = {
+const emptyArticle: articleType = {
     title: "",
     sign: "",
     thumb: "",
@@ -30,17 +35,18 @@ const emptyArticle = {
     recommend: "",
     create_time: null
 };
-const articleReducer = (state = initState, action) => {
+const articleReducer = (
+    state: articleState = initState,
+    action: articleActionTypes
+) => {
     const type = action.type;
     switch (type) {
         case SEARCH_LIST:
             return Object.assign({}, state, { data: action.data });
         case CHANGE_ARTICLE: {
-            console.log("action.data", action.data);
             const singleArticle = Object.assign({}, state.singleArticle, {
                 ...action.data
             });
-            console.log("singleArticle", singleArticle);
             return Object.assign({}, state, { singleArticle });
         }
         case CLEAR_ARTICLE:

@@ -1,12 +1,25 @@
 import { Form, Input, Button, Select, Row, Col } from "antd";
-import React from "react";
-import { withRouter } from "react-router-dom";
+import * as React from "react";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { FormComponentProps } from "antd/lib/form";
 import { articleClear } from "../../action/system/article";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import Types from "MyTypes";
+import { bindActionCreators, Dispatch } from "redux";
 const { Option } = Select;
-
-class SearchComponent extends React.Component {
+const mapStateProps = () => ({});
+const mapDispatchProps = (dispatch: Dispatch) => ({
+    clearPropsArticle: () => {
+        dispatch(articleClear());
+    }
+});
+interface Props extends FormComponentProps, RouteComponentProps {
+    fetch: Function;
+    pageCon: object;
+    clearPropsArticle: Function;
+}
+class SearchComponent extends React.Component<Props, {}> {
     handleSearch(e) {
         const _this = this;
         e.preventDefault();
@@ -19,9 +32,6 @@ class SearchComponent extends React.Component {
         this.props.clearPropsArticle();
         this.props.history.push("/article/edit");
     };
-    // componentDidMount() {
-    //     console.log("searchform", this.props);
-    // }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -63,21 +73,21 @@ class SearchComponent extends React.Component {
         );
     }
 }
-const mapStateProps = state => ({});
-const mapDispatchProps = dispatch => ({
-    clearPropsArticle: () => {
-        dispatch(articleClear());
-    }
-});
-
-const SearchConditions = Form.create({ name: "search_conditions" })(
+const SearchConditions = Form.create<Props>({ name: "search_conditions" })(
     SearchComponent
 );
-const enhance = compose(
-    withRouter,
+// const enhance = compose(
+//     withRouter,
+//     connect(
+//         mapStateProps,
+//         mapDispatchProps
+//     )
+// );
+const WrappedSearchConditions = withRouter(
     connect(
         mapStateProps,
         mapDispatchProps
-    )
+    )(SearchConditions)
 );
-export default enhance(SearchConditions);
+export default WrappedSearchConditions;
+// export default withRouter<Props, React.ComponentType<Props>>(SearchComponent);

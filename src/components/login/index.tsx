@@ -1,29 +1,23 @@
-import React from "react";
-import {
-    Form,
-    Icon,
-    Input,
-    Button,
-    Checkbox,
-    notification,
-    Layout
-} from "antd";
+import * as React from "react";
+import { Form, Icon, Input, Button } from "antd";
+import { FormComponentProps } from "antd/lib/form";
 import "./index.less";
-import { login } from "@/action/system/login";
+import { login } from "../../action/system/login";
+import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
-const { Content } = Layout;
-class LoginForm extends React.Component {
-    handleSubmit = e => {
+// interface LoginProps extends FormComponentProps {}
+
+const mapStateProps = () => ({});
+const mapDispatchProps = (dispatch: Dispatch) =>
+    bindActionCreators({ login: (params: any) => login(params) }, dispatch);
+type Props = FormComponentProps & ReturnType<typeof mapDispatchProps>;
+class LoginForm extends React.Component<Props, {}> {
+    handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
         const _this = this;
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             _this.props.login({
                 ...values
-                // errorFn: msg => {
-                //     notification["Warning"]({
-                //         message: msg
-                //     });
-                // }
             });
         });
     };
@@ -31,8 +25,6 @@ class LoginForm extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div className="login-container">
-                {/* <Layout>
-                    <Content> */}
                 <Form onSubmit={this.handleSubmit} className="login-form">
                     <h3 className="title">个人博客后台系统</h3>
                     <Form.Item>
@@ -80,11 +72,6 @@ class LoginForm extends React.Component {
                             />
                         )}
                     </Form.Item>
-                    {/* <Form.Item> */}
-                    {/* {getFieldDecorator("remember", {
-                            valuePropName: "checked",
-                            initialValue: true
-                        })(<Checkbox>Remeber me</Checkbox>)} */}
                     <div className="tips">
                         <span>账户: admin</span>
                         <span> 密码: 123456</span>
@@ -92,26 +79,13 @@ class LoginForm extends React.Component {
                     <Button type="primary" htmlType="submit" className="button">
                         登录
                     </Button>
-                    {/* </Form.Item> */}
                 </Form>
-                {/* </Content>
-                </Layout> */}
             </div>
         );
     }
 }
 const WrappedNormalLoginForm = Form.create({ name: "normal_login" })(LoginForm);
-const mapStateProps = state => ({});
-const mapDispatchProps = dispatch => ({
-    login: params => {
-        console.log("this", this);
-        dispatch(
-            login({
-                ...params
-            })
-        );
-    }
-});
+
 const enhance = connect(
     mapStateProps,
     mapDispatchProps
