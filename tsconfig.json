@@ -10,6 +10,11 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        },
         // "noImplicitAny": true,
         "strictNullChecks": true
     },

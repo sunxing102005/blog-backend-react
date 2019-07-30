@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import {
     Form,
     Input,
@@ -23,47 +23,71 @@ import "./editArticle.less";
 import MdEditor from "@/components/common/markdownEditor/editor";
 import { addArticle } from "@/api/content";
 import UploadImg from "@/components/common/UploadImg";
+import Types from "MyTypes";
+import { bindActionCreators, Dispatch } from "redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { FormComponentProps } from "antd/lib/form";
 const qs = require("query-string");
 const { Option } = Select;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
-class EditForm extends React.Component {
+const mapStateProps = (state: Types.RootState) => ({
+    title: state.article.singleArticle.title,
+    sign: state.article.singleArticle.sign,
+    thumb: state.article.singleArticle.thumb,
+    date: state.article.singleArticle.date,
+    status: state.article.singleArticle.status,
+    tag: state.article.singleArticle.tag,
+    article: state.article,
+    tags: state.article.tags,
+    categoryId: state.article.singleArticle.category_id,
+    createTime: state.article.singleArticle.create_time,
+    recommend: state.article.singleArticle.recommend,
+    markdown: state.article.singleArticle.markdown
+});
+const mapDispatchProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            changeArticle: (params: object) => articleChange(params),
+            articleClear: (params: object) => articleClear({ ...params }),
+            fetchTags: (params: object) => setTags({ ...params }),
+            fetchSingleArt: (params: object) => fetchListData({ ...params })
+        },
+        dispatch
+    );
+const state = {
+    visibleUpload: false,
+    defaultFileList: []
+};
+interface markType {
+    getMarkedHtml(): string;
+}
+type propsType = ReturnType<typeof mapDispatchProps> &
+    ReturnType<typeof mapStateProps> &
+    RouteComponentProps &
+    FormComponentProps;
+class EditForm extends React.Component<propsType, typeof state> {
     constructor(props) {
         super(props);
         this.markdownRef = React.createRef();
     }
-    state = {
-        visibleUpload: false,
-        defaultFileList: []
-    };
-    componentWillMount() {
+    markdownRef: React.RefObject<markType>;
+    state = state;
+    componentDidMount() {
         this.props.fetchTags({ type: "tag" });
         const articleId = qs.parse(this.props.location.search).id;
         if (articleId) {
             this.props.fetchSingleArt({
                 id: articleId
             });
-            // .then(() => {
-            //     if (this.props.thumb) {
-            //         this.setState({
-            //             defaultFileList: [
-            //                 { uid: "-1", url: this.props.thumb }
-            //             ]
-            //         });
-            //     }
-            // });
         }
-    }
-    componentDidMount() {
-        // let mark = this.markdownRef;
-        console.log("props", this.props);
     }
     handleSubmit = e => {
         e.preventDefault();
 
         let article = Object.assign({}, this.props.article.singleArticle);
 
-        let content = this.markdownRef.current.getMarkedHtml();
+        let content = this.markdownRef.current!.getMarkedHtml();
         article.content = content;
         let now = new Date();
         let time = date.toFormat(now, "yyyy-MM-dd hh:mm:ss");
@@ -81,8 +105,6 @@ class EditForm extends React.Component {
             });
         } else {
             addArticle(article).then(res => {
-                console.log("res", res);
-                console.log("::::！");
                 if (res.id) {
                     message.success("新增成功!").then(() => {
                         this.props.history.push("/article/table");
@@ -131,12 +153,6 @@ class EditForm extends React.Component {
     };
     render() {
         console.log("this.props", this.props);
-        // if (this.props.thumb) {
-        //     this.setState({
-        //         defaultFileList: [{ uid: "-1", url: this.props.thumb }]
-        //     });
-        //     console.log("defaultFileList", this.state.defaultFileList);
-        // }
         let uploadBtnText = "上传图片";
         if (this.props.thumb && this.props.thumb != config.serverHost) {
             uploadBtnText = "修改上传图片";
@@ -291,37 +307,10 @@ class EditForm extends React.Component {
         );
     }
 }
-const EditFormWrap = Form.create({ name: "edit-form" })(EditForm);
-const mapStateProps = state => ({
-    title: state.article.singleArticle.title,
-    sign: state.article.singleArticle.sign,
-    thumb: state.article.singleArticle.thumb,
-    date: state.article.singleArticle.date,
-    status: state.article.singleArticle.status,
-    tag: state.article.singleArticle.tag,
-    article: state.article,
-    tags: state.article.tags,
-    categoryId: state.article.singleArticle.category_id,
-    createTime: state.article.singleArticle.create_time,
-    recommend: state.article.singleArticle.recommend,
-    markdown: state.article.singleArticle.markdown
-});
-const mapDispatchProps = dispatch => ({
-    changeArticle: data => {
-        dispatch(articleChange(data));
-    },
-    articleClear: data => {
-        dispatch(articleClear(data));
-    },
-    fetchTags: params => {
-        dispatch(setTags({ ...params }));
-    },
-    fetchSingleArt: params => {
-        dispatch(fetchListData({ ...params }));
-    }
-});
+const EditFormWrap = Form.create<propsType>({ name: "edit-form" })(EditForm);
+
 const enhance = connect(
     mapStateProps,
     mapDispatchProps
 );
-export default enhance(EditFormWrap);
+export default withRouter(enhance(EditFormWrap));

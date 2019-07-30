@@ -42,10 +42,10 @@ const articleReducer = (
     const type = action.type;
     switch (type) {
         case SEARCH_LIST:
-            return Object.assign({}, state, { data: action.data });
+            return Object.assign({}, state, { data: action.payload });
         case CHANGE_ARTICLE: {
             const singleArticle = Object.assign({}, state.singleArticle, {
-                ...action.data
+                ...action.payload
             });
             return Object.assign({}, state, { singleArticle });
         }
@@ -54,7 +54,7 @@ const articleReducer = (
                 singleArticle: emptyArticle
             });
         case SET_TAGS:
-            return Object.assign({}, state, { tags: action.data });
+            return Object.assign({}, state, { tags: action.payload });
         default:
             return state;
     }

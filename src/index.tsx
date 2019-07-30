@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import "./index.css";
 import "font-awesome/css/font-awesome.min.css";
 import App from "./App";
@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import configureStore from "./store";
 import * as serviceWorker from "./serviceWorker";
 const store = configureStore();
-React.$store = store;
+window.globalStore = store;
 ReactDOM.render(
     <Provider store={store}>
         <App />

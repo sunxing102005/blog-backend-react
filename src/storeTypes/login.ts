@@ -4,6 +4,7 @@ interface setTokenTypes {
 }
 interface setNameTypes {
     type: string;
+    payload?: string;
     name?: string;
     token?: string;
 }

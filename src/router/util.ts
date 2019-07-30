@@ -1,5 +1,9 @@
 export default {
-    flatRoutes(routeTree = [], routes = [], parent = null) {
+    flatRoutes(
+        routeTree: Array<any> = [],
+        routes: Array<any> = [],
+        parent: object | null = null
+    ) {
         for (let i = 0; i < routeTree.length; i++) {
             const routeItem = routeTree[i];
             let cloneRoute = { ...routeItem };

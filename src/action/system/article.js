@@ -5,18 +5,14 @@ import {
     SET_TAGS
 } from "../../actionTypes/article";
 import service from "../../axios/service";
-const setList = data => {
-    return { type: SEARCH_LIST, data };
-};
-const changeArticle = data => {
-    return { type: CHANGE_ARTICLE, data };
-};
-const clearArticle = data => {
-    return { type: CLEAR_ARTICLE, data };
-};
-const fetchTags = data => {
-    return { type: SET_TAGS, data };
-};
+import { action } from "typesafe-actions";
+export function getData(params) {
+    return service({
+        url: "/api/content1",
+        method: "get",
+        data: params
+    });
+}
 export function fetchListData(params) {
     return dispatch => {
         return service({
@@ -26,10 +22,10 @@ export function fetchListData(params) {
         })
             .then(res => {
                 if (res.data instanceof Array) {
-                    dispatch(setList(res));
+                    dispatch(action(SEARCH_LIST, res));
                 } else {
                     dispatch(
-                        changeArticle({
+                        action(CHANGE_ARTICLE, {
                             ...res,
                             tag: res.tag.map(item => item.id)
                         })
@@ -49,7 +45,7 @@ export function setTags(params) {
             data: params
         })
             .then(res => {
-                dispatch(fetchTags(res));
+                dispatch(action(SET_TAGS, res));
             })
             .catch(err => {
                 console.error("err", err);
@@ -58,11 +54,11 @@ export function setTags(params) {
 }
 export function articleChange(data) {
     return dispatch => {
-        dispatch(changeArticle(data));
+        dispatch(action(CHANGE_ARTICLE, data));
     };
 }
 export function articleClear(data) {
     return dispatch => {
-        dispatch(clearArticle(data));
+        dispatch(action(CLEAR_ARTICLE, data));
     };
 }

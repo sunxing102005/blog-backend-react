@@ -1,10 +1,10 @@
 interface setObjectAction {
     type: string;
-    data: object | null;
+    payload: object | null;
 }
 interface setArrayAction {
     type: string;
-    data: ReadonlyArray<object> | null;
+    payload: ReadonlyArray<object> | null;
 }
 export type articleActionTypes = setObjectAction | setArrayAction;
 export type articleType = {

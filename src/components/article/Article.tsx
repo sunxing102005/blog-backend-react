@@ -11,6 +11,9 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import { compose } from "redux";
 import { bindActionCreators, Dispatch } from "redux";
 import Types from "MyTypes";
+import { notEmpty } from "@/utils/decorators/validators/rules";
+import { validate } from "@/utils/decorators/validators/validate";
+import { ReactAutoBind } from "@/utils/decorators/reactAutoBind";
 const mapStateProps = (state: Types.RootState) => ({
     data: state.article.data,
     total: state.article.data.count
@@ -40,6 +43,7 @@ const state = {
     currentRecord: { id: "" }
 };
 
+@ReactAutoBind()
 class Article extends React.Component<Props, typeof state> {
     state = state;
     componentWillMount() {
@@ -64,9 +68,11 @@ class Article extends React.Component<Props, typeof state> {
         this.setState({ page });
         this.fetch({ page, pageSize: this.state.pageSize });
     }
-    fetch(params) {
+    // @loading("tableLoading")
+    @validate()
+    async fetch(@notEmpty() params) {
         this.setState({ tableLoading: true });
-        this.props.fetchData({
+        await this.props.fetchData({
             ...params,
             errorFn: () => {
                 this.setState({ tableLoading: false });

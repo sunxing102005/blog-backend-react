@@ -1,5 +1,5 @@
 import config from "../config/index.js";
-const getRequestURL = path => {
+const getRequestURL = (path: string): string => {
     return config.serverHost + path;
 };
 

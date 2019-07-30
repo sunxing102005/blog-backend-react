@@ -16,7 +16,6 @@ import { fedLogout } from "@/action/system/login";
 import { getToken } from "@/utils/auth";
 const qs = require("querystring");
 // import { Message } from "element-ui";
-
 const service = option => {
     console.log("option", option);
 
@@ -98,7 +97,7 @@ const service = option => {
             console.error(" service error:", error);
             if (res && res.status == 401) {
                 message.info("登录信息失效，请重新登录").then(() => {
-                    React.$store.dispatch(fedLogout());
+                    window.globalStore.dispatch(fedLogout());
                 });
             }
             req &&

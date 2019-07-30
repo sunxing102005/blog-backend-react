@@ -320,7 +320,7 @@ class MdEditor extends React.Component {
                 </div>
                 <UploadImg
                     visible={this.state.visibleUpload}
-                    onConcel={() => (this.state.visibleUpload = false)}
+                    onConcel={() => this.setState({ visibleUpload: false })}
                     onOk={this.handleInsertImg}
                 />
             </div>
