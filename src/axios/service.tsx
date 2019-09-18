@@ -78,9 +78,12 @@ const service = (option: OptionType) => {
             let res = error.response;
             console.error(" service error:", error);
             if (res && res.status == 401) {
-                message.info("登录信息失效，请重新登录").then(() => {
-                    window.globalStore.dispatch(fedLogout());
-                });
+                message.info("登录信息失效，请重新登录").then(
+                    () => {
+                        window.globalStore.dispatch(fedLogout());
+                    },
+                    () => {}
+                );
             }
             req &&
                 req.callbackErrFn &&

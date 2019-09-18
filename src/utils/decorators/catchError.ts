@@ -13,7 +13,7 @@ export function catchError(catchFunc?: Function) {
                 try {
                     return await fun.apply(_this, args);
                 } catch (error) {
-                    errorHandle.apply(self, [error, catchFunc]);
+                    errorHandle.apply(_this, [error, catchFunc]);
                 }
             })();
         };
