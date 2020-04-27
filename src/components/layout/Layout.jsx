@@ -9,7 +9,7 @@ import routes from "@/router/index";
 import { fedLogout } from "@/action/system/login";
 import { connect } from "react-redux";
 import history from "@/utils/history";
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 class MainLayout extends React.Component {
     state = {
         collapsed: false
@@ -99,6 +99,7 @@ class MainLayout extends React.Component {
                                 })}
                             </Switch>
                         </Content>
+                        <Footer style={{ textAlign: 'center' }}>Design By SUNX  个人博客管理  <a href="http://www.beian.miit.gov.cn">辽ICP备19009050号-1</a></Footer>
                     </Layout>
                 </Layout>
             </Router>

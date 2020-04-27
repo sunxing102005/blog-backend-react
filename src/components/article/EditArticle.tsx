@@ -98,17 +98,17 @@ class EditForm extends React.Component<propsType, typeof state> {
         if (article.id) {
             addArticle(article, article.id).then(res => {
                 if (res.id) {
-                    message.success("修改成功!").then(() => {
+                    message.success("修改成功!", () => {
                         this.props.history.push("/article/table");
-                    });
+                    })
                 }
             });
         } else {
             addArticle(article).then(res => {
                 if (res.id) {
-                    message.success("新增成功!").then(() => {
+                    message.success("新增成功!", () => {
                         this.props.history.push("/article/table");
-                    });
+                    })
                 }
             });
         }
